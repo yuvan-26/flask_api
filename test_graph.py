@@ -67,5 +67,7 @@ def plot_chart():
         return jsonify({'error': str(e)})
 
 if __name__ == '__main__':
+    logger.info('Main has started.')
+    plot_chart()
     app.run(debug=True, use_reloader=False)
 
