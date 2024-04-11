@@ -35,7 +35,7 @@ def plot_chart():
         # Connect to MySQL database
         mydb = mysql.connector.connect(**config)
 
-        # SQL query to fetch data
+        # SQL query to fetch the data
         sql_query = "SELECT Temperature, PH, Soil, Waterlevel, Space, Label FROM garden"
 
         # Load data from MySQL into a pandas DataFrame
@@ -44,7 +44,7 @@ def plot_chart():
         # Close database connection
         mydb.close()
 
-        # Log message
+        # Log test message
         logger.info('Data fetched successfully from the database.')
 
         # Plot interactive line chart
