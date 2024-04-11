@@ -6,6 +6,7 @@
 # In[9]:
 
 
+import logging
 from flask import Flask, jsonify
 from flask_cors import CORS
 import pandas as pd
@@ -14,6 +15,10 @@ import mysql.connector
 
 app = Flask(__name__)
 CORS(app)  # Enable CORS for all routes
+
+# Configure logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 # Connection parameters
 config = {
@@ -39,6 +44,9 @@ def plot_chart():
         # Close database connection
         mydb.close()
 
+        # Log message
+        logger.info('Data fetched successfully from the database.')
+
         # Plot interactive line chart
         fig = px.line(df, x='Label', y='PH', color='Label',
                       title='Distribution of PH of Garden Crops over Labels',
@@ -55,6 +63,7 @@ def plot_chart():
         return jsonify(fig.to_json())
 
     except Exception as e:
+        logger.error('An error occurred: %s', str(e))
         return jsonify({'error': str(e)})
 
 if __name__ == '__main__':
