@@ -1,3 +1,4 @@
+import logging
 import pandas as pd
 from flask import Flask, jsonify
 from flask_cors import CORS
@@ -6,6 +7,10 @@ import mysql.connector
 # Create a Flask app
 app = Flask(__name__)
 CORS(app)  # Enable CORS for all routes
+
+# Configure logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 # Connection parameters
 config = {
@@ -34,10 +39,13 @@ def get_plant_data():
         # Convert DataFrame to JSON format
         plant_data_json = df.to_json(orient='records')
 
+        logger.info('Plant data retrieved successfully')
+
         return jsonify(plant_data_json)
 
     except Exception as e:
+        logger.error('An error occurred: %s', str(e))
         return jsonify({'error': str(e)})
 
 if __name__ == '__main__':
-    app.run(debug=True , use_reloader = False)
+    app.run(debug=True, use_reloader=False)
