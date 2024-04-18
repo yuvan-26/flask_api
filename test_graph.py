@@ -31,6 +31,39 @@ config_plot = {
     'port': 3306
 }
 
+def fetch_data():
+    
+    # Connect to MySQL database
+    mydb = mysql.connector.connect(**config_plot)
+
+    # SQL query to fetch the data
+    sql_query = "SELECT Temperature, PH, Soil, Waterlevel, Space, Label FROM garden"
+
+    # Load data from MySQL into a pandas DataFrame
+    df = pd.read_sql(sql_query, mydb)
+
+    # Close database connection
+    mydb.close()
+
+    return df
+
+@app.route('/heat_plot_chart', methods=['GET'])
+def heat_plot_chart():
+    df = fetch_data()
+
+    # Create bins for 'Temperature' values
+    df['Temp_bin'] = pd.cut(df['Temperature'], bins=10, labels=[f'Temp_bin_{i}' for i in range(1, 11)])
+
+    # Plot interactive heatmap with x and y axis swapped
+    fig = px.imshow(df.pivot_table(index='Temp_bin', columns='Label', values='Temperature', aggfunc='mean'),
+                    labels={'Label': 'Label'},
+                    title='Heatmap of Temperature Values of Garden Crops over Labels')
+
+    # Increase figure size
+    fig.update_layout(width=1000, height=1000)
+
+    return jsonify(fig.to_json())
+
 @app.route('/plant_data', methods=['GET'])
 def get_plant_data():
     try:
