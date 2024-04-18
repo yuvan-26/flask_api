@@ -57,7 +57,7 @@ def heat_plot_chart():
     # Plot interactive heatmap with x and y axis swapped
     fig = px.imshow(df.pivot_table(index='Temp_bin', columns='Label', values='Temperature', aggfunc='mean'),
                     labels={'Label': 'Label'},
-                    title='Heatmap of Temperature Values of Garden Crops over Labels')
+                    title='')
 
     # Increase figure size
     fig.update_layout(width=1000, height=1000)
